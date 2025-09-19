@@ -6,6 +6,7 @@ import {
   ConversationScrollButton,
 } from '@/components/ai-elements/conversation';
 import { Message, MessageContent } from '@/components/ai-elements/message';
+import { MessageAvatar } from '@/components/ai-elements/message';
 import {
   PromptInput,
   PromptInputActionAddAttachments,
@@ -79,9 +80,9 @@ const ChatBotDemo = () => {
     }
 
     sendMessage(
-      { 
+      {
         text: message.text || 'Sent with attachments',
-        files: message.files 
+        files: message.files
       },
       {
         body: {
@@ -94,9 +95,9 @@ const ChatBotDemo = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
-      <div className="flex flex-col h-full">
-        <Conversation className="h-full">
+    <div className="max-w-4xl mx-auto p-4 h-full flex flex-col">
+      <div className="flex flex-col h-full bg-gray-800/20 backdrop-blur-xl rounded-2xl border border-gray-700/30 glassmorphism-chat shadow-2xl p-4 gap-4">
+        <Conversation className="flex-1 min-h-0">
           <ConversationContent>
             {messages.map((message) => (
               <div key={message.id}>
@@ -130,11 +131,23 @@ const ChatBotDemo = () => {
                       return (
                         <Fragment key={`${message.id}-${i}`}>
                           <Message from={message.role}>
+                            {message.role === 'assistant' && (
+                              <MessageAvatar
+                                src=""
+                                name="AI"
+                              />
+                            )}
                             <MessageContent>
                               <Response>
                                 {part.text}
                               </Response>
                             </MessageContent>
+                            {message.role === 'user' && (
+                              <MessageAvatar
+                                src=""
+                                name="User"
+                              />
+                            )}
                           </Message>
                           {message.role === 'assistant' && i === messages.length - 1 && (
                             <Actions className="mt-2">
@@ -169,8 +182,8 @@ const ChatBotDemo = () => {
                       );
                     case 'tool-call':
                       return (
-                        <Tool 
-                          key={`${message.id}-${i}`} 
+                        <Tool
+                          key={`${message.id}-${i}`}
                           defaultOpen={part.state === 'output-available' || part.state === 'output-error'}
                         >
                           <ToolHeader type={part.type} state={part.state} />
@@ -181,16 +194,16 @@ const ChatBotDemo = () => {
                             )}
                             {/* Show successful output */}
                             {part.state === 'output-available' && (
-                              <ToolOutput 
-                                output={part.output} 
-                                errorText={undefined} 
+                              <ToolOutput
+                                output={part.output}
+                                errorText={undefined}
                               />
                             )}
                             {/* Show error output */}
                             {part.state === 'output-error' && (
-                              <ToolOutput 
-                                output={undefined} 
-                                errorText={part.errorText} 
+                              <ToolOutput
+                                output={undefined}
+                                errorText={part.errorText}
                               />
                             )}
                           </ToolContent>
@@ -218,7 +231,6 @@ const ChatBotDemo = () => {
                         );
                       }
                       if (part.type === 'step-start') {
-                        // Solo mostrar "Starting step..." durante el streaming
                         if (status === 'streaming' && message.id === messages.at(-1)?.id) {
                           return (
                             <div key={`${message.id}-${i}`} className="text-sm text-gray-500 mb-2 italic">
@@ -226,7 +238,6 @@ const ChatBotDemo = () => {
                             </div>
                           );
                         }
-                        // Una vez completado, no mostrar nada o mostrar un indicador discreto
                         return null;
                       }
                       return null;
@@ -239,7 +250,7 @@ const ChatBotDemo = () => {
           <ConversationScrollButton />
         </Conversation>
 
-        <PromptInput onSubmit={handleSubmit} className="mt-4" globalDrop multiple>
+        <PromptInput onSubmit={handleSubmit} className="flex-shrink-0" globalDrop multiple>
           <PromptInputBody>
             <PromptInputAttachments>
               {(attachment) => <PromptInputAttachment data={attachment} />}
@@ -282,7 +293,11 @@ const ChatBotDemo = () => {
                 </PromptInputModelSelectContent>
               </PromptInputModelSelect>
             </PromptInputTools>
-            <PromptInputSubmit disabled={!input && !status} status={status} />
+            <PromptInputSubmit 
+              disabled={!input && !status} 
+              status={status}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm"
+            />
           </PromptInputToolbar>
         </PromptInput>
       </div>

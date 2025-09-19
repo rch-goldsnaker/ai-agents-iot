@@ -120,3 +120,95 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Reset and layout fixes */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Custom Glassmorphism and Dark Mode Styles */
+@layer utilities {
+  .glassmorphism-header {
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .glassmorphism-chat {
+    background: rgba(31, 41, 55, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(75, 85, 99, 0.2);
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .glassmorphism-avatar {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 4px 15px rgba(59, 130, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .glow-text:hover {
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  }
+
+  /* Dark mode message bubbles */
+  .message-user {
+    background: rgba(59, 130, 246, 0.2);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    box-shadow: 
+      0 4px 12px rgba(59, 130, 246, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .message-ai {
+    background: rgba(55, 65, 81, 0.6);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Input area glassmorphism */
+  .input-glassmorphism {
+    background: rgba(31, 41, 55, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  /* Scrollbar dark theme */
+  .dark-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.1);
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(75, 85, 99, 0.6);
+    border-radius: 4px;
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(75, 85, 99, 0.8);
+  }
+}

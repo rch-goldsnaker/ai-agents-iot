@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { UIMessage } from "ai";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps, HTMLAttributes } from "react";
+import { User, Bot } from "lucide-react";
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
   from: UIMessage["role"];
@@ -15,8 +16,8 @@ export type MessageProps = HTMLAttributes<HTMLDivElement> & {
 export const Message = ({ className, from, ...props }: MessageProps) => (
   <div
     className={cn(
-      "group flex w-full items-end justify-end gap-2 py-4",
-      from === "user" ? "is-user" : "is-assistant flex-row-reverse justify-end",
+      "group flex w-full items-start gap-3 py-3",
+      from === "user" ? "is-user justify-end" : "is-assistant justify-start",
       className
     )}
     {...props}
@@ -24,18 +25,18 @@ export const Message = ({ className, from, ...props }: MessageProps) => (
 );
 
 const messageContentVariants = cva(
-  "is-user:dark flex flex-col gap-2 overflow-hidden rounded-lg text-sm",
+  "is-user:dark flex flex-col gap-2 overflow-hidden rounded-xl text-sm leading-relaxed bg-slate-800",
   {
     variants: {
       variant: {
         contained: [
-          "max-w-[80%] px-4 py-3",
-          "group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground",
-          "group-[.is-assistant]:bg-secondary group-[.is-assistant]:text-foreground",
+          "max-w-[75%] px-4 py-3",
+          "group-[.is-user]:message-user group-[.is-user]:text-white/95",
+          "group-[.is-assistant]:message-ai group-[.is-assistant]:text-gray-50",
         ],
         flat: [
-          "group-[.is-user]:max-w-[80%] group-[.is-user]:bg-secondary group-[.is-user]:px-4 group-[.is-user]:py-3 group-[.is-user]:text-foreground",
-          "group-[.is-assistant]:text-foreground",
+          "group-[.is-user]:max-w-[75%] group-[.is-user]:message-user group-[.is-user]:px-4 group-[.is-user]:py-3 group-[.is-user]:text-white/95",
+          "group-[.is-assistant]:text-gray-50",
         ],
       },
     },
@@ -72,9 +73,18 @@ export const MessageAvatar = ({
   name,
   className,
   ...props
-}: MessageAvatarProps) => (
-  <Avatar className={cn("size-8 ring-1 ring-border", className)} {...props}>
-    <AvatarImage alt="" className="mt-0 mb-0" src={src} />
-    <AvatarFallback>{name?.slice(0, 2) || "ME"}</AvatarFallback>
-  </Avatar>
-);
+}: MessageAvatarProps) => {
+  const isUser = name === 'User';
+  const fallbackClass = isUser 
+    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white" 
+    : "bg-gradient-to-r from-purple-500 to-purple-600 text-white";
+    
+  return (
+    <Avatar className={cn("size-9 ring-2 ring-border/50 flex-shrink-0 mt-1", className)} {...props}>
+      <AvatarImage alt="" className="mt-0 mb-0" src={src} />
+      <AvatarFallback className={cn("text-xs font-semibold", fallbackClass)}>
+        {isUser ? <User size={18} /> : <Bot size={18} />}
+      </AvatarFallback>
+    </Avatar>
+  );
+};

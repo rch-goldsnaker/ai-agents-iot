@@ -434,7 +434,7 @@ export const PromptInput = ({
       />
       <form
         className={cn(
-          "w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm",
+          "w-full divide-y overflow-hidden rounded-xl border input-glassmorphism shadow-lg",
           className
         )}
         onSubmit={handleSubmit}
