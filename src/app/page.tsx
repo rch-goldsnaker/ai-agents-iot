@@ -47,6 +47,7 @@ import {
   ReasoningTrigger,
 } from '@/components/ai-elements/reasoning';
 import { Loader } from '@/components/ai-elements/loader';
+import { Tool, ToolHeader, ToolContent } from '@/components/ai-elements/tool';
 
 const models = [
   {
@@ -63,7 +64,11 @@ const ChatBotDemo = () => {
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(models[0].value);
   const [webSearch, setWebSearch] = useState(false);
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status } = useChat({
+    onError: (error) => {
+      console.error('Chat error:', error);
+    }
+  });
 
   const handleSubmit = (message: PromptInputMessage) => {
     const hasText = Boolean(message.text);
@@ -162,7 +167,45 @@ const ChatBotDemo = () => {
                           <ReasoningContent>{part.text}</ReasoningContent>
                         </Reasoning>
                       );
+                    case 'tool-call':
+                      return (
+                        <Tool key={`${message.id}-${i}`}>
+                          <ToolHeader type={part.type} state={part.state} />
+                          <ToolContent>
+                            <div className="text-sm">
+                              <div>Tool called: {part.type}</div>
+                              <div>State: {part.state}</div>
+                              {JSON.stringify(part, null, 2)}
+                            </div>
+                          </ToolContent>
+                        </Tool>
+                      );
                     default:
+                      // Handle tool calls with dynamic names like 'tool-getTime'
+                      if (part.type.startsWith('tool-')) {
+                        return (
+                          <div key={`${message.id}-${i}`} className="mb-4 p-4 border rounded-lg bg-blue-50">
+                            <div className="text-sm">
+                              <div className="font-semibold">🔧 Tool: {part.type.replace('tool-', '')}</div>
+                              <pre className="mt-2 bg-white p-2 rounded text-xs overflow-auto max-h-40">
+                                {JSON.stringify(part, null, 2)}
+                              </pre>
+                            </div>
+                          </div>
+                        );
+                      }
+                      if (part.type === 'step-start') {
+                        // Solo mostrar "Starting step..." durante el streaming
+                        if (status === 'streaming' && message.id === messages.at(-1)?.id) {
+                          return (
+                            <div key={`${message.id}-${i}`} className="text-sm text-gray-500 mb-2 italic">
+                              🔄 Processing...
+                            </div>
+                          );
+                        }
+                        // Una vez completado, no mostrar nada o mostrar un indicador discreto
+                        return null;
+                      }
                       return null;
                   }
                 })}
