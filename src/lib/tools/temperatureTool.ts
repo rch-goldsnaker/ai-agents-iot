@@ -9,7 +9,7 @@ export const temperatureTool: ToolFunction<TemperatureToolParams, TemperatureToo
   try {
     console.log('🌡️ TemperatureTool: Executing with params:', params);
     
-    const { entityId, keys = 'temperature', useStrictDataTypes = true } = params;
+    const { entityId, keys = 'temperature' } = params;
     
     // Get ThingsBoard configuration and auth service
     const authService = ThingsBoardAuthService.getInstance();
@@ -57,7 +57,7 @@ export const temperatureTool: ToolFunction<TemperatureToolParams, TemperatureToo
     // Process the response to extract values from the new format
     // Response format: { "temperature": [{"ts": 1758215705509, "value": "19"}], "ledState": [...], ... }
     let latestTemperature = null;
-    let allSensorData: Record<string, any> = {};
+    const allSensorData: Record<string, { value: string; timestamp: string; rawTimestamp: number }> = {};
     
     // Extract all available sensor data
     for (const [key, values] of Object.entries(data)) {
@@ -111,7 +111,7 @@ export const temperatureTool: ToolFunction<TemperatureToolParams, TemperatureToo
     }
 
     // Get sensor ID if available in the data
-    let sensorId = targetEntityId;
+    const sensorId = targetEntityId;
 
     // Build result
     const result: TemperatureToolResult = {

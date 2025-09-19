@@ -54,7 +54,7 @@ export const sensorAttributesTool: ToolFunction<SensorAttributesToolParams, Sens
     console.log('📊 SensorAttributesTool: Raw response sample:', JSON.stringify(rawData.slice(0, 3), null, 2));
 
     // Process the response array into structured attributes
-    const attributes = rawData.map((item: any) => ({
+    const attributes = rawData.map((item: { lastUpdateTs: number; key: string; value: string | number | boolean }) => ({
       lastUpdateTs: item.lastUpdateTs,
       key: item.key,
       value: item.value,
@@ -76,7 +76,7 @@ export const sensorAttributesTool: ToolFunction<SensorAttributesToolParams, Sens
     console.log('📊 SensorAttributesTool: Unique attributes count:', uniqueAttributes.length);
 
     // Create a summary with key information
-    const summary: any = {};
+    const summary: Record<string, string | number | boolean> = {};
     uniqueAttributes.forEach((attr: SensorAttribute) => {
       switch (attr.key) {
         case 'macAddress':

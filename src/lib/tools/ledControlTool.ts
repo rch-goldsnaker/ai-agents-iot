@@ -69,7 +69,7 @@ export const ledControlTool: ToolFunction<LedControlToolParams, LedControlToolRe
       if (responseText.trim()) {
         responseData = JSON.parse(responseText);
       }
-    } catch (e) {
+    } catch {
       console.log('💡 LedControlTool: Empty or non-JSON response (normal for LED control)');
     }
 

@@ -126,7 +126,7 @@ class ThingsBoardAuthService {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp < currentTime;
-    } catch (error) {
+    } catch {
       console.warn('🔑 ThingsBoardAuth: Could not parse token, assuming expired');
       return true;
     }

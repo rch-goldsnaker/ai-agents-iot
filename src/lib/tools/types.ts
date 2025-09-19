@@ -1,8 +1,8 @@
-export interface ToolResult<T = any> {
+export interface ToolResult<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface TemperatureToolParams {
@@ -18,7 +18,7 @@ export interface TemperatureToolResult {
   sensorId: string;
   message: string;
   timestamp?: string;
-  allSensorData?: Record<string, any>;
+  allSensorData?: Record<string, { value: string; timestamp: string; rawTimestamp: number }>;
 }
 
 export interface LedControlToolParams {
@@ -41,7 +41,7 @@ export interface SensorAttributesToolParams {
 export interface SensorAttribute {
   lastUpdateTs: number;
   key: string;
-  value: any;
+  value: string | number | boolean;
   timestamp: string; // ISO formatted timestamp
 }
 
@@ -62,6 +62,6 @@ export interface SensorAttributesToolResult {
   };
 }
 
-export type ToolFunction<TParams = any, TResult = any> = (
+export type ToolFunction<TParams = Record<string, unknown>, TResult = unknown> = (
   params: TParams
 ) => Promise<ToolResult<TResult>>;
