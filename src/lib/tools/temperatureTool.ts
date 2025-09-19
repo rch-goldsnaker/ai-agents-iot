@@ -1,5 +1,6 @@
 import type { ToolFunction, TemperatureToolParams, TemperatureToolResult } from './types';
 import ThingsBoardAuthService from '../services/thingsBoardAuth';
+import { z } from 'zod';
 
 /**
  * Tool to get temperature data from ThingsBoard
@@ -153,4 +154,31 @@ export const temperatureTool: ToolFunction<TemperatureToolParams, TemperatureToo
       }
     };
   }
+};
+
+/**
+ * AI SDK compatible temperature tool definition
+ */
+export const temperatureAITool = {
+  description: 'Get current temperature from IoT sensors. Use this when users ask about temperature, how hot/cold it is, sensor readings, or IoT data.',
+  inputSchema: z.object({
+    entityId: z.string().optional().describe('Entity ID of the sensor (optional, uses default if not provided)'),
+  }),
+  execute: async (params: { entityId?: string }) => {
+    const result = await temperatureTool(params);
+    
+    if (result.success) {
+      return {
+        success: true,
+        temperature: result.data?.temperature || 'N/A',
+        unit: result.data?.unit || '°C',
+        source: result.data?.source || 'IoT Sensor',
+        sensorId: result.data?.sensorId || 'Unknown',
+        message: result.data?.message || 'Temperature retrieved successfully',
+        timestamp: result.data?.timestamp || new Date().toISOString(),
+      };
+    } else {
+      throw new Error(result.error || 'Failed to get temperature');
+    }
+  },
 };

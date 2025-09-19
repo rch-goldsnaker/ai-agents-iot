@@ -1,5 +1,6 @@
 import type { ToolFunction, LedControlToolParams, LedControlToolResult } from './types';
 import ThingsBoardAuthService from '../services/thingsBoardAuth';
+import { z } from 'zod';
 
 /**
  * Tool to control the sensor LED state (turn on/off)
@@ -110,4 +111,30 @@ export const ledControlTool: ToolFunction<LedControlToolParams, LedControlToolRe
       }
     };
   }
+};
+
+/**
+ * AI SDK compatible LED control tool definition
+ */
+export const ledControlAITool = {
+  description: 'Control LED state (turn on/off). Use this when users want to turn on, turn off, enable, disable, or control the LED.',
+  inputSchema: z.object({
+    ledState: z.boolean().describe('LED state: true to turn ON, false to turn OFF'),
+    entityId: z.string().optional().describe('Entity ID of the device (optional, uses default if not provided)'),
+  }),
+  execute: async (params: { ledState: boolean; entityId?: string }) => {
+    const result = await ledControlTool(params);
+    
+    if (result.success) {
+      return {
+        success: true,
+        ledState: result.data?.ledState ?? false,
+        message: result.data?.message || `LED ${params.ledState ? 'turned ON' : 'turned OFF'}`,
+        timestamp: result.data?.timestamp || new Date().toISOString(),
+        entityId: result.data?.entityId || 'Unknown'
+      };
+    } else {
+      throw new Error(result.error || 'Failed to control LED');
+    }
+  },
 };

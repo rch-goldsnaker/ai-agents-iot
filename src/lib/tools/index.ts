@@ -1,7 +1,7 @@
 // Tool exports
-export { temperatureTool } from './temperatureTool';
-export { ledControlTool } from './ledControlTool';
-export { sensorAttributesTool } from './sensorAttributesTool';
+export { temperatureTool, temperatureAITool } from './temperatureTool';
+export { ledControlTool, ledControlAITool } from './ledControlTool';
+export { sensorAttributesTool, sensorAttributesAITool } from './sensorAttributesTool';
 
 // Types exports
 export type { 
@@ -17,15 +17,22 @@ export type {
 } from './types';
 
 // Import for registry
-import { temperatureTool } from './temperatureTool';
-import { ledControlTool } from './ledControlTool';
-import { sensorAttributesTool } from './sensorAttributesTool';
+import { temperatureTool, temperatureAITool } from './temperatureTool';
+import { ledControlTool, ledControlAITool } from './ledControlTool';
+import { sensorAttributesTool, sensorAttributesAITool } from './sensorAttributesTool';
 
 // Tool registry for easy access
 export const TOOLS = {
   getTemperature: temperatureTool,
   ledControl: ledControlTool,
   sensorAttributes: sensorAttributesTool,
+} as const;
+
+// AI SDK Tools for streamText
+export const aiSDKTools = {
+  getTemperature: temperatureAITool,
+  controlLED: ledControlAITool,
+  getSensorAttributes: sensorAttributesAITool,
 } as const;
 
 export type ToolName = keyof typeof TOOLS;

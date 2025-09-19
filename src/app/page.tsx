@@ -47,7 +47,7 @@ import {
   ReasoningTrigger,
 } from '@/components/ai-elements/reasoning';
 import { Loader } from '@/components/ai-elements/loader';
-import { Tool, ToolHeader, ToolContent } from '@/components/ai-elements/tool';
+import { Tool, ToolHeader, ToolContent, ToolInput, ToolOutput } from '@/components/ai-elements/tool';
 
 const models = [
   {
@@ -169,29 +169,52 @@ const ChatBotDemo = () => {
                       );
                     case 'tool-call':
                       return (
-                        <Tool key={`${message.id}-${i}`}>
+                        <Tool 
+                          key={`${message.id}-${i}`} 
+                          defaultOpen={part.state === 'output-available' || part.state === 'output-error'}
+                        >
                           <ToolHeader type={part.type} state={part.state} />
                           <ToolContent>
-                            <div className="text-sm">
-                              <div>Tool called: {part.type}</div>
-                              <div>State: {part.state}</div>
-                              {JSON.stringify(part, null, 2)}
-                            </div>
+                            {/* Show input parameters when tool is running or completed */}
+                            {(part.state === 'input-available' || part.state === 'output-available' || part.state === 'output-error') && (
+                              <ToolInput input={part.input} />
+                            )}
+                            {/* Show successful output */}
+                            {part.state === 'output-available' && (
+                              <ToolOutput 
+                                output={part.output} 
+                                errorText={undefined} 
+                              />
+                            )}
+                            {/* Show error output */}
+                            {part.state === 'output-error' && (
+                              <ToolOutput 
+                                output={undefined} 
+                                errorText={part.errorText} 
+                              />
+                            )}
                           </ToolContent>
                         </Tool>
                       );
                     default:
-                      // Handle tool calls with dynamic names like 'tool-getTime'
+                      // Handle tool calls with dynamic names like 'tool-getTemperature'
                       if (part.type.startsWith('tool-')) {
                         return (
-                          <div key={`${message.id}-${i}`} className="mb-4 p-4 border rounded-lg bg-blue-50">
-                            <div className="text-sm">
-                              <div className="font-semibold">🔧 Tool: {part.type.replace('tool-', '')}</div>
-                              <pre className="mt-2 bg-white p-2 rounded text-xs overflow-auto max-h-40">
-                                {JSON.stringify(part, null, 2)}
-                              </pre>
-                            </div>
-                          </div>
+                          <Tool key={`${message.id}-${i}`} defaultOpen={true}>
+                            <ToolHeader type={part.type as `tool-${string}`} state="output-available" />
+                            <ToolContent>
+                              <div className="p-4">
+                                <h4 className="font-medium text-muted-foreground text-xs uppercase tracking-wide mb-2">
+                                  Tool Result
+                                </h4>
+                                <div className="rounded-md bg-muted/50 p-3">
+                                  <pre className="text-xs overflow-auto max-h-40">
+                                    {JSON.stringify(part, null, 2)}
+                                  </pre>
+                                </div>
+                              </div>
+                            </ToolContent>
+                          </Tool>
                         );
                       }
                       if (part.type === 'step-start') {

@@ -1,6 +1,6 @@
-import { streamText, UIMessage, convertToModelMessages } from 'ai';
+import { streamText, UIMessage, convertToModelMessages, stepCountIs } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { orchestratorAgent, type AgentContext } from '@/lib/agents';
+import { aiSDKTools } from '@/lib/tools';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -11,73 +11,45 @@ export async function POST(req: Request) {
     
     const {
       messages,
-      model,
-      webSearch,
     }: {
       messages: UIMessage[];
       model: string;
       webSearch: boolean;
     } = await req.json();
 
-    // Obtener el último mensaje del usuario
-    const lastUserMessage = messages.filter(m => m.role === 'user').pop();
-    const userQuery = lastUserMessage?.parts.find(p => p.type === 'text')?.text || '';
-    
-    console.log('📝 User query:', userQuery);
+    console.log('📝 Processing messages with AI SDK tools');
 
-    // Crear contexto para los agentes
-    const context: AgentContext = {
-      messages,
-      userQuery,
-      metadata: { model, webSearch }
-    };
+    // Use streamText with native tools support
+    const result = await streamText({
+      model: openai('gpt-4o'),
+      messages: convertToModelMessages(messages),
+      system: `You are a helpful IoT assistant that can control devices and get sensor data.
+        Available tools:
+        - getTemperature: Get current temperature from IoT sensors
+        - controlLED: Turn device LED on or off  
+        - getSensorAttributes: Get device information and sensor attributes
 
-    console.log('🎯 Starting Orchestrator Agent');
-    // Use the multi-agent system
-    const agentResult = await orchestratorAgent(context);
-    console.log('✅ Orchestrator Agent result:', { 
-      success: agentResult.success, 
-      hasMessage: !!agentResult.message,
-      error: agentResult.error 
+        Use tools when users ask about:
+        - Temperature, sensor readings, IoT data → use getTemperature
+        - Turn on/off LED, LED control → use controlLED  
+        - Device status, sensor info, configuration, attributes → use getSensorAttributes
+
+        IMPORTANT: After using any tool, always provide a natural, conversational response that:
+        1. Explains what the tool did
+        2. Interprets the results in a helpful way
+        3. Provides context or additional insights when appropriate
+        4. Uses a friendly, informative tone
+
+        Respond in the same language as the user's question.`,
+      tools: aiSDKTools,
+      stopWhen: stepCountIs(3),
+      temperature: 0.7,
     });
 
-    if (agentResult.success && agentResult.message) {
-      console.log('✅ Multi-agent system successful, using generated response');
-      // If agents generated a successful response, use streamText to send it
-      const result = await streamText({
-        model: openai('gpt-4o'),
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a helpful assistant. Respond with the exact message provided to you.'
-          },
-          {
-            role: 'user', 
-            content: `Please respond with this exact message: ${agentResult.message}`
-          }
-        ],
-        temperature: 0,
-      });
-
-      return result.toUIMessageStreamResponse({
-        sendSources: true,
-        sendReasoning: true,
-      });
-    } else {
-      console.log('⚠️ Multi-agent system failed, using fallback');
-      // Fallback al sistema original si los agentes fallan
-      const result = await streamText({
-        model: openai('gpt-4o'),
-        messages: convertToModelMessages(messages),
-        system: 'You are a helpful assistant that can answer questions and help with tasks.',
-        temperature: 0.7,
-      });
-
-      return result.toUIMessageStreamResponse({
-        sendSources: true,
-        sendReasoning: true,
-      });
-    }
+    return result.toUIMessageStreamResponse({
+      sendSources: true,
+      sendReasoning: true,
+    });
 
   } catch (error) {
     console.error('Chat API Error:', error);
