@@ -101,7 +101,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `THINGSBOARD_PASSWORD` | ThingsBoard password | ✅ |
 | `THINGSBOARD_DEFAULT_ENTITY_ID` | Default device ID | ✅ |
 | `THINGSBOARD_ENTITY_TYPE` | Entity type (DEVICE by default) | ✅ |
-| `THINGSBOARD_ACCESS_TOKEN` | Access token (auto-generated) | ❌ |
 
 ## 🏗️ Project Architecture
 
