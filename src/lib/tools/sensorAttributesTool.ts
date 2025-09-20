@@ -160,16 +160,8 @@ export const sensorAttributesAITool = {
   execute: async (params: { entityId?: string }) => {
     const result = await sensorAttributesTool(params);
     
-    if (result.success) {
-      return {
-        success: true,
-        entityId: result.data?.entityId || 'Unknown',
-        attributes: result.data?.attributes || [],
-        attributeCount: result.data?.attributeCount || 0,
-        summary: result.data?.summary || {},
-        message: result.data?.message || 'Attributes retrieved successfully',
-        timestamp: result.data?.timestamp || new Date().toISOString()
-      };
+    if (result.success && result.data) {
+      return result.data;
     } else {
       throw new Error(result.error || 'Failed to get sensor attributes');
     }

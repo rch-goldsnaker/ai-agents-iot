@@ -13,7 +13,7 @@ import type { ComponentProps } from "react";
 export type ActionsProps = ComponentProps<"div">;
 
 export const Actions = ({ className, children, ...props }: ActionsProps) => (
-  <div className={cn("flex items-center gap-1", className)} {...props}>
+  <div className={cn("flex items-center gap-1 sm:gap-2 flex-wrap", className)} {...props}>
     {children}
   </div>
 );
@@ -35,7 +35,7 @@ export const Action = ({
   const button = (
     <Button
       className={cn(
-        "relative size-9 p-1.5 text-muted-foreground hover:text-foreground",
+        "relative size-8 sm:size-9 p-1 sm:p-1.5 text-muted-foreground hover:text-foreground text-xs sm:text-sm",
         className
       )}
       size={size}

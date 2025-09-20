@@ -125,14 +125,8 @@ export const ledControlAITool = {
   execute: async (params: { ledState: boolean; entityId?: string }) => {
     const result = await ledControlTool(params);
     
-    if (result.success) {
-      return {
-        success: true,
-        ledState: result.data?.ledState ?? false,
-        message: result.data?.message || `LED ${params.ledState ? 'turned ON' : 'turned OFF'}`,
-        timestamp: result.data?.timestamp || new Date().toISOString(),
-        entityId: result.data?.entityId || 'Unknown'
-      };
+    if (result.success && result.data) {
+      return result.data;
     } else {
       throw new Error(result.error || 'Failed to control LED');
     }

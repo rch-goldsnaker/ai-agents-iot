@@ -211,4 +211,47 @@ html, body {
   .dark-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(75, 85, 99, 0.8);
   }
+
+  /* Responsive utilities */
+  .responsive-padding {
+    padding: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .responsive-padding {
+      padding: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .responsive-padding {
+      padding: 1.5rem;
+    }
+  }
+
+  /* Mobile-first breakpoints for better touch targets */
+  @media (max-width: 639px) {
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Responsive text scaling */
+  .responsive-text {
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 640px) {
+    .responsive-text {
+      font-size: 1rem;
+    }
+  }
+
+  /* Mobile menu fixes */
+  @media (max-width: 1023px) {
+    .mobile-menu-open {
+      overflow: hidden;
+    }
+  }
 }

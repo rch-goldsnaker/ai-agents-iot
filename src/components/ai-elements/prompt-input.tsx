@@ -486,10 +486,10 @@ export const PromptInputTextarea = ({
   return (
     <Textarea
       className={cn(
-        "w-full resize-none rounded-none border-none p-3 shadow-none outline-none ring-0",
+        "w-full resize-none rounded-none border-none p-3 sm:p-4 shadow-none outline-none ring-0",
         "field-sizing-content bg-transparent dark:bg-transparent",
-        "max-h-48 min-h-16",
-        "focus-visible:ring-0",
+        "max-h-40 sm:max-h-56 min-h-14 sm:min-h-20 text-base sm:text-lg",
+        "focus-visible:ring-0 placeholder:text-muted-foreground/70",
         className
       )}
       name="message"
@@ -510,7 +510,7 @@ export const PromptInputToolbar = ({
   ...props
 }: PromptInputToolbarProps) => (
   <div
-    className={cn("flex items-center justify-between p-1", className)}
+    className={cn("flex items-center justify-between p-2 sm:p-3 gap-2", className)}
     {...props}
   />
 );
@@ -523,7 +523,7 @@ export const PromptInputTools = ({
 }: PromptInputToolsProps) => (
   <div
     className={cn(
-      "flex items-center gap-1",
+      "flex items-center gap-1 sm:gap-2 flex-wrap",
       "[&_button:first-child]:rounded-bl-xl",
       className
     )}
@@ -545,9 +545,10 @@ export const PromptInputButton = ({
   return (
     <Button
       className={cn(
-        "shrink-0 gap-1.5 rounded-lg",
+        "shrink-0 gap-1 rounded-lg h-7 sm:h-8",
         variant === "ghost" && "text-muted-foreground",
-        newSize === "default" && "px-3",
+        newSize === "default" && "px-1.5 sm:px-2 text-xs",
+        newSize === "icon" && "w-7 sm:w-8",
         className
       )}
       size={newSize}
@@ -573,7 +574,7 @@ export const PromptInputActionMenuTrigger = ({
 }: PromptInputActionMenuTriggerProps) => (
   <DropdownMenuTrigger asChild>
     <PromptInputButton className={className} {...props}>
-      {children ?? <PlusIcon className="size-4" />}
+      {children ?? <PlusIcon className="size-3" />}
     </PromptInputButton>
   </DropdownMenuTrigger>
 );
@@ -613,19 +614,19 @@ export const PromptInputSubmit = ({
   children,
   ...props
 }: PromptInputSubmitProps) => {
-  let Icon = <SendIcon className="size-4" />;
+  let Icon = <SendIcon className="size-4 sm:size-5" />;
 
   if (status === "submitted") {
-    Icon = <Loader2Icon className="size-4 animate-spin" />;
+    Icon = <Loader2Icon className="size-4 sm:size-5 animate-spin" />;
   } else if (status === "streaming") {
-    Icon = <SquareIcon className="size-4" />;
+    Icon = <SquareIcon className="size-4 sm:size-5" />;
   } else if (status === "error") {
-    Icon = <XIcon className="size-4" />;
+    Icon = <XIcon className="size-4 sm:size-5" />;
   }
 
   return (
     <Button
-      className={cn("gap-1.5 rounded-lg", className)}
+      className={cn("gap-1.5 rounded-lg h-10 sm:h-11 w-10 sm:w-11 min-w-[2.5rem] sm:min-w-[2.75rem]", className)}
       size={size}
       type="submit"
       variant={variant}
@@ -652,7 +653,7 @@ export const PromptInputModelSelectTrigger = ({
 }: PromptInputModelSelectTriggerProps) => (
   <SelectTrigger
     className={cn(
-      "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors",
+      "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors h-7 sm:h-8 text-xs px-1.5 sm:px-2",
       'hover:bg-accent hover:text-foreground [&[aria-expanded="true"]]:bg-accent [&[aria-expanded="true"]]:text-foreground',
       className
     )}

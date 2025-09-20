@@ -23,7 +23,7 @@ export type ToolProps = ComponentProps<typeof Collapsible>;
 
 export const Tool = ({ className, ...props }: ToolProps) => (
   <Collapsible
-    className={cn("not-prose mb-4 w-full rounded-md border", className)}
+    className={cn("not-prose mb-2 sm:mb-4 w-full rounded-md border", className)}
     {...props}
   />
 );
@@ -65,17 +65,17 @@ export const ToolHeader = ({
 }: ToolHeaderProps) => (
   <CollapsibleTrigger
     className={cn(
-      "flex w-full items-center justify-between gap-4 p-3",
+      "flex w-full items-center justify-between gap-2 sm:gap-4 p-2 sm:p-3 hover:bg-muted/50 [&[data-state=open]>svg]:rotate-180",
       className
     )}
     {...props}
   >
-    <div className="flex items-center gap-2">
-      <WrenchIcon className="size-4 text-muted-foreground" />
-      <span className="font-medium text-sm">{type}</span>
+    <div className="flex items-center gap-2 min-w-0 flex-1">
+      <WrenchIcon className="size-4 sm:size-5 flex-shrink-0 text-muted-foreground" />
+      <span className="font-medium text-xs sm:text-sm truncate">{type}</span>
       {getStatusBadge(state)}
     </div>
-    <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+    <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180 flex-shrink-0" />
   </CollapsibleTrigger>
 );
 
@@ -96,7 +96,7 @@ export type ToolInputProps = ComponentProps<"div"> & {
 };
 
 export const ToolInput = ({ className, input, ...props }: ToolInputProps) => (
-  <div className={cn("space-y-2 overflow-hidden p-4", className)} {...props}>
+  <div className={cn("space-y-2 overflow-hidden p-2 sm:p-4", className)} {...props}>
     <h4 className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
       Parameters
     </h4>

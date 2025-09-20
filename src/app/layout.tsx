@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 h-full overflow-hidden`}
       >
         <Header />
-        <main className="h-[calc(100vh-4rem)] overflow-hidden">
+        <main className="h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] overflow-hidden">
           {children}
         </main>
       </body>
