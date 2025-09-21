@@ -1,5 +1,7 @@
 # AI IoT Chat
 
+<img src="https://github.com/rch-goldsnaker/ai-agents-iot/blob/master/public/ai-iot.png" alt="Project Banner">
+
 An intelligent chat system that integrates AI agents with IoT devices, enabling sensor control and monitoring through natural conversations.
 
 ## 🚀 Project Overview
